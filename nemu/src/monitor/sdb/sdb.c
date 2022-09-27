@@ -54,6 +54,22 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args){
+  char *arg=strtok(NULL,"");
+  if(arg==NULL){
+    cpu_exec(1);
+    return 0;}
+  int step;
+  sscanf(arg,"%d",&step);
+  cpu_exec(step);
+  return 0;}
+  
+static int cmd_info(char *args){
+  return 0;}
+  
+static int cmd_x(char *args){
+  return 0;}
+
 static struct {
   const char *name;
   const char *description;
@@ -62,6 +78,9 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  {"si","single step",cmd_si},
+  {"info","print register",cmd_info},
+  {"x","scanf memory",cmd_x},
 
   /* TODO: Add more commands */
 
@@ -69,6 +88,7 @@ static struct {
 
 #define NR_CMD ARRLEN(cmd_table)
 
+  
 static int cmd_help(char *args) {
   /* extract the first argument */
   char *arg = strtok(NULL, " ");
