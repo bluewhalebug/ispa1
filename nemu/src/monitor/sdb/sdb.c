@@ -79,7 +79,7 @@ static int cmd_x(char *args){
   sscanf(N,"%d",&n);
   sscanf(EXPR,"%x",&add);
   for(int i=0; i<n;i++){
-    printf("%08x",paddr_read(add,4));
+    printf("%08x\n",paddr_read(add,4));
     add=add+4;}
   return 0;}
 
