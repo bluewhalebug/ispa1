@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256,tennum=0,sixnum,zuo,you,muti,divi,jian,note,and,or,not,'+',reg,TK_EQ
 
   /* TODO: Add more token types */
 
@@ -39,6 +39,20 @@ static struct rule {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ},        // equal
+  {"[0-9]+",tennum}     // shijinzhi
+  {"0x[0-9,a-f]+",sixnum}//shiliujinzhi
+  {"\\(",zuo}             //zuokuohao
+  {"\\)",you}             //youkuohao
+  {"\\*",muti}            //muti
+  {"\\/",divi}            //divi
+  {"\\-",jian}            //jian
+  {"!=",note}              //not equal 
+  {"&&",and}              //and
+  {"\\|\\|",or}           //or
+  {"!",not}               //not
+  {"\\$[a-z]{2,3}",reg}   //reg
+  
+  
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -88,13 +102,56 @@ static bool make_token(char *e) {
             i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
-
+        
         /* TODO: Now a new token is recognized with rules[i]. Add codes
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+        
 
         switch (rules[i].token_type) {
+          case 0: 
+                   nr_token++;
+                   tokens[nr_token].type=tennum;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+          case 1:
+                   nr_token++;
+                   tokens[nr_token].type=sixnum;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+          case 2:
+                   nr_token++;
+                   tokens[nr_token].type=zuo;
+          case 3:
+                   nr_token++;
+                   tokens[nr_token].type=you;
+          case 4:
+                   nr_token++;
+                   tokens[nr_token].type=muti;
+          case 5:
+                   nr_token++;
+                   tokens[nr_token].type=divi;
+          case 6:
+                   nr_token++;
+                   tokens[nr_token].type=jian;
+          case 7:
+                   nr_token++;
+                   tokens[nr_token].type=note;
+          case 8:
+                   nr_token++;
+                   tokens[nr_token].type=and;
+          case 9:
+                   nr_token++;
+                   tokens[nr_token].type=or;
+          case 10:
+                   nr_token++;
+                   tokens[nr_token].type=not;
+          case 11:
+                   nr_token++;
+                   tokens[nr_token].type='+';
+          case 12:
+                   nr_token++;
+                   tokens[nr_token].type=reg;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
           default: TODO();
         }
 
