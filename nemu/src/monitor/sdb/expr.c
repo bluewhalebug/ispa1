@@ -23,7 +23,7 @@
 word_t isa_reg_str2val(const char *s, bool *success);
 
 enum {
-  TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,DEREF
+  TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,NEG
 
   /* TODO: Add more token types */
 
@@ -197,11 +197,12 @@ bool check_parentheses(int p, int q){
   if(tokens[x].type=='-')return 1;
   if(tokens[x].type=='*')return 2;
   if(tokens[x].type=='/')return 2;
+  if(tokens[x].type==265)return 3;
   return(100);
   }
   
   int opfind(int p,int q){
-  int tag=2;  
+  int tag=3;  
   int match=0;
   int op=0;
   for(int i=p;i<=q;i++){
@@ -216,7 +217,7 @@ bool check_parentheses(int p, int q){
   }
   if(i>q) break;
   }
-  if(tokens[i].type=='+' || tokens[i].type=='-' || tokens[i].type=='*' || tokens[i].type=='/'){
+  if(tokens[i].type=='+' || tokens[i].type=='-' || tokens[i].type=='*' || tokens[i].type=='/' || tokens[i].type==265){
   if(youxianji(i)<=tag){
   tag=youxianji(i);
   op=i;}
@@ -268,6 +269,7 @@ int eval(int p, int q) {
       case '-': /* ... */return val1-val2;
       case '*': /* ... */return val1*val2;
       case '/': /* ... */return val1/val2;
+      case 265: return -val2;
       default: assert(0);
     }
   }
@@ -284,6 +286,10 @@ word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;}
+    for(int i=0;i<=nr_token-1;i++){
+    if(tokens[i].type=='-' && (i==0 || (tokens[i-1].type!=257 && tokens[i-1].type!=258 && tokens[i-1].type!=259 && tokens[i-1].type!=')')))
+    tokens[i].type=NEG;}
+    
 return eval(0,nr_token-1);}
 
   /* TODO: Insert codes to evaluate the expression. */
