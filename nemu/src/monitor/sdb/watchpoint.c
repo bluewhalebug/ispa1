@@ -84,16 +84,12 @@ del=true;
 else{
 WP *p=head;
 int j=0;
-while(j<x && p->next !=NULL){
+while(j<x && p!=NULL){
 p=p->next;
 j++;
 }
-if(p->next!=NULL){
-WP *q=p->next;
-p->next=q->next;
-free_wp(q);
+free_wp(p);
 del=true;
-}
 }
 return del;
 }
