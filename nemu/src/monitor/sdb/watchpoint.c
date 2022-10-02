@@ -63,8 +63,8 @@ return p;
 }
 
 int free_wp(WP *wp){
-if(wp==head){head=head->next;assert(0);}
-else{assert(0);
+if(wp==head)head=head->next;
+else{
 WP *p=head;
 while(p->next!=wp)p=p->next;
 p->next=wp->next;
@@ -81,13 +81,12 @@ bool del=false;
 int a=0;
 if(x==0){
 WP *p=head;
-head =head->next;
 a=free_wp(p);
 }
 else{
 WP *p=head;
 int j=0;
-while(j<x-1 && p->next !=NULL){
+while(j<x && p->next !=NULL){
 p=p->next;
 j++;
 }
