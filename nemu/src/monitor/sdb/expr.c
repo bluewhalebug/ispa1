@@ -189,10 +189,18 @@ bool check_parentheses(int p, int q){
   }
   
   
+  int youxianji(int x){
+  if(tokens[x].type=='+')return 1;
+  if(tokens[x].type=='-')return 1;
+  if(tokens[x].type=='*')return 2;
+  if(tokens[x].type=='/')return 2;
+  return(100);
+  }
   
   int opfind(int p,int q){
   int match=0;
-  int tag=8;
+  int tag=2;
+  int op=0;
   for(int i=p;i<=q;i++){
   if(tokens[i].type =='('){
   match++;
@@ -205,9 +213,13 @@ bool check_parentheses(int p, int q){
   }
   if(i>q) break;
   }
-  if(tokens[i].type <= tag && tokens[i].type >=5 ) tag=i;
+  if(tokens[i].type=='+' || tokens[i].type=='-' || tokens[i].type=='*' || tokens[i].type=='/'){
+  if(youxianji(i)<=tag){
+  tag=youxianji(i);
+  op=i;}
   }
-  return tag;
+  }
+  return op;
   }
   
   
