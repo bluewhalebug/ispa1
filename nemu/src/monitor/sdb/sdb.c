@@ -21,10 +21,24 @@
 
 static int is_batch_mode = false;
 
+typedef struct watchpoint {
+  int NO;
+  struct watchpoint *next;
+  char exp[32];
+  uint32_t value;
+} WP;
+
 void init_regex();
 void init_wp_pool();
 word_t vaddr_read(paddr_t addr, int len);
 word_t expr(char *e, bool *success) ;
+void print_wp();
+void delete_wp(int x);
+void free_wp(WP *wp);
+WP* new_wp(char *exp);
+
+
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
   static char *line_read = NULL;
@@ -70,6 +84,7 @@ static int cmd_info(char *args){
   if(strcmp(arg,"r")==0){
     isa_reg_display();
   }
+  if(strcmp(arg,"w")==0) print_wp();
   return 0;}
   
 static int cmd_x(char *args){
@@ -92,6 +107,22 @@ int result=expr(args,&suc);
 printf("result=%d\n",result);
 return 0;
 }
+
+static int cmd_w(char *args) {
+WP *wp=new_wp(args);
+printf("watchpoint%d:%s is set\n",wp->NO,wp->exp);
+return 0;
+}
+
+static int cmd_d(char *args) {
+  char *arg=strtok(NULL,"");
+  int n=0;
+  sscanf(arg,"%d",&n);
+  delete_wp(n);
+  return 0;
+}
+
+
 static struct {
   const char *name;
   const char *description;
@@ -104,6 +135,9 @@ static struct {
   {"info","print register",cmd_info},
   {"x","scanf memory",cmd_x},
   {"p","expr",cmd_p},
+  {"w","set wp",cmd_w},
+  {"d","delete wp",cmd_d},
+  
 
   /* TODO: Add more commands */
 

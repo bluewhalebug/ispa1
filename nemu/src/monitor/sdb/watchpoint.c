@@ -20,10 +20,13 @@
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
+  char exp[32];
+  uint32_t value;
 
   /* TODO: Add more members if necessary */
 
 } WP;
+
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -38,6 +41,99 @@ void init_wp_pool() {
   head = NULL;
   free_ = wp_pool;
 }
+
+WP* new_wp(char *exp){
+if(free_==NULL)assert(0);
+WP *p=free_;
+free_=free_->next;
+p->next=NULL;
+bool suc=false;
+strcpy(p->exp,exp);
+p->value=expr(p->exp,&suc);
+if(suc==false)assert(0);
+if(head==NULL){
+head=p;
+p->next=NULL;}
+else{
+WP *q=head;
+while(q->next!=NULL)q=q->next;
+q->next=p;
+p->next=NULL;}
+return p;
+}
+
+void free_wp(WP *wp){
+if(wp==head)head=head->next;
+else{
+WP *p=head;
+while(p->next!=wp)p=p->next;
+p->next=wp->next;
+}
+wp->next=free_;
+free_=wp;
+}
+
+
+void delete_wp(int x){
+if(x==1){
+WP *p=head;
+head =head->next;
+free_wp(p);
+}
+else{
+WP *p=head;
+int j=1;
+while(j<x-1 && p->next !=NULL){
+p=p->next;
+j++;
+}
+if(p->next!=NULL){
+WP *q=p->next;
+p->next=q->next;
+free_wp(q);
+printf("delete this watchpoint\n");
+}
+else printf("no such watchpoint\n");
+}
+}
+
+
+void print_wp(){
+for(WP *p=head; p!=NULL; p=p->next)
+printf("%d  %s  %d\n",p->NO,p->exp,p->value);
+}
+
+bool check_wp(){
+bool check=false;
+for(WP *p=head; p!=NULL; p=p->next){
+int a=p->value;
+bool suc=false;
+int b=expr(p->exp,&suc);
+if(a!=b){
+printf("%d  %s  origin:%d new:%d\n",p->NO,p->exp,a,b);
+p->value=b;
+check=true;
+}
+}
+return check;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* TODO: Implement the functionality of watchpoint */
 
