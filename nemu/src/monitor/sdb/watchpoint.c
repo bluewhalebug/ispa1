@@ -47,7 +47,7 @@ if(free_==NULL)assert(0);
 WP *p=free_;
 free_=free_->next;
 p->next=NULL;
-bool suc=false;
+bool suc=true;
 strcpy(p->exp,exp);
 p->value=expr(p->exp,&suc);
 if(suc==false)assert(0);
@@ -107,7 +107,7 @@ bool check_wp(){
 bool check=false;
 for(WP *p=head; p!=NULL; p=p->next){
 int a=p->value;
-bool suc=false;
+bool suc=true;
 int b=expr(p->exp,&suc);
 if(a!=b){
 printf("%d  %s  origin:%d new:%d\n",p->NO,p->exp,a,b);
