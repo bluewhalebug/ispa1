@@ -71,6 +71,7 @@ p->next=wp->next;
 }
 wp->next=free_;
 free_=wp;
+assert(0);
 return 1;
 }
 
