@@ -74,12 +74,13 @@ free_=wp;
 }
 
 
-void delete_wp(int x){
+bool delete_wp(int x){
+bool del=false;
 if(x==0){
 WP *p=head;
 head =head->next;
 free_wp(p);
-printf("delete this watchpoint\n");
+del=true;
 }
 else{
 WP *p=head;
@@ -92,12 +93,11 @@ if(p->next!=NULL){
 WP *q=p->next;
 p->next=q->next;
 free_wp(q);
-printf("delete this watchpoint\n");
-}
-else printf("no such watchpoint\n");
+del=true;
 }
 }
-
+return del;
+}
 
 void print_wp(){
 for(WP *p=head; p!=NULL; p=p->next)

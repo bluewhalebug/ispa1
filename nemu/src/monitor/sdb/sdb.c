@@ -33,7 +33,7 @@ void init_wp_pool();
 word_t vaddr_read(paddr_t addr, int len);
 word_t expr(char *e, bool *success) ;
 void print_wp();
-void delete_wp(int x);
+bool delete_wp(int x);
 void free_wp(WP *wp);
 WP* new_wp(char *exp);
 
@@ -118,7 +118,8 @@ static int cmd_d(char *args) {
   char *arg=strtok(NULL,"");
   int n=0;
   sscanf(arg,"%d",&n);
-  delete_wp(n);
+  if(delete_wp(n)==true)printf("delete %d watchpoint\n",n);
+  else printf("no such watchpoint\n");
   return 0;
 }
 
