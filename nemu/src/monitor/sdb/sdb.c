@@ -90,7 +90,7 @@ init_regex();
 bool suc=true;
 int result=expr(args,&suc);
 printf("result=%d\n",result);
-
+return 0;
 }
 static struct {
   const char *name;

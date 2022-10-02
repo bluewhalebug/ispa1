@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256,tennum=0,sixnum,reg,'(',')','*','/','+','-',TK_EQ,note,and,or,not
+  TK_NOTYPE = 256,TK_tennum,TK_sixnum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
 
   /* TODO: Add more token types */
 
@@ -37,9 +37,9 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"[0-9]+",tennum} ,    // shijinzhi
-  {"0x[0-9,a-f]+",sixnum},//shiliujinzhi
-  {"\\$[a-z]{2,3}",reg} ,  //reg
+  {"[0-9]+",TK_tennum} ,    // shijinzhi
+  {"0x[0-9,a-f]+",TK_sixnum},//shiliujinzhi
+  {"\\$[a-z]{2,3}",TK_reg} ,  //reg
   {"\\(",'('}  ,           //zuokuohao
   {"\\)",')'}  ,           //youkuohao
   {"\\*",'*'}  ,          //muti
@@ -47,10 +47,10 @@ static struct rule {
   {"\\+", '+'},          // plus  
   {"\\-",'-'}  ,          //jian
   {"==", TK_EQ},        // equal
-  {"!=",note}   ,           //not equal 
-  {"&&",and}  ,            //and
-  {"\\|\\|",or}   ,        //or
-  {"!",not}            //not
+  {"!=",TK_NEQ}   ,           //not equal 
+  {"&&",TK_AND}  ,            //and
+  {"\\|\\|",TK_OR}   ,        //or
+  {"!",TK_NOT}            //not
 
 };
 
@@ -109,54 +109,60 @@ static bool make_token(char *e) {
         
 
         switch (rules[i].token_type) {
-          case 0: 
-                   nr_token++;
-                   tokens[nr_token].type=tennum;
+          case 257: 
+                   tokens[nr_token].type=257;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
-          case 1:
-                   nr_token++;
-                   tokens[nr_token].type=sixnum;
+                   break;
+          case 258:
+                   tokens[nr_token].type=258;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
-          case 2:
-                   nr_token++;
-                   tokens[nr_token].type=reg;
+                   break;
+          case 259:
+                   tokens[nr_token].type=259;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
-          case 3:
-                   nr_token++;
+                   break;
+          case 260:
+                   tokens[nr_token].type=260;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   break;
+          case 261:
+                   tokens[nr_token].type=261;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   break;
+          case 262:
+                   tokens[nr_token].type=262;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   break;
+          case 263:
+                   tokens[nr_token].type=263;
+                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   break;
+          case 264:
+                   tokens[nr_token].type=264;        
+                   break; 
+          case '(':
                    tokens[nr_token].type='(';
-          case 4:
-                   nr_token++;
-                   tokens[nr_token].type=')';
-          case 5:
-                   nr_token++;
-                   tokens[nr_token].type='*';
-          case 6:
-                   nr_token++;
-                   tokens[nr_token].type'/';
-          case 7:
-                   nr_token++;
-                   tokens[nr_token].type='+';         
-          case 8:
-                   nr_token++;
+                   break;
+          case ')':
+                   tokens[nr_token].type=')';    
+                   break;     
+          case '+':
+                   tokens[nr_token].type='+';
+                   break;
+          case '-':
                    tokens[nr_token].type='-';
-          case 9:
-                   nr_token++;
-                   tokens[nr_token].type=TK_EQ;         
-          case 10:
-                   nr_token++;
-                   tokens[nr_token].type=note;
-          case 11:
-                   nr_token++;
-                   tokens[nr_token].type=and;
-          case 12:
-                   nr_token++;
-                   tokens[nr_token].type=or;
-          case 13:
-                   nr_token++;
-                   tokens[nr_token].type=not;
-          default: TODO();
+                   break;
+          case '*':
+                   tokens[nr_token].type='*';
+                   break;
+          case '/':
+                   tokens[nr_token].type='/';
+                   break;
+          default:
+          nr_token--;
+          break;
         }
-
+        nr_token++;
         break;
       }
     }
@@ -182,6 +188,8 @@ bool check_parentheses(int p, int q){
   return true;
   }
   
+  
+  
   int opfind(int p,int q){
   int match=0;
   int tag=8;
@@ -206,7 +214,7 @@ bool check_parentheses(int p, int q){
   
   
   
-eval(p, q) {
+int eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
     assert(0);
@@ -216,12 +224,12 @@ eval(p, q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-     if(tokens[p].type==tennum){
-       uint32_t n=0;
+     if(tokens[p].type==257){
+       int n=0;
        sscanf(tokens[p].str,"%d",&n);
        return n;}
-     if(tokens[p].type==sixnum){
-       uint32_t n=0;
+     if(tokens[p].type==258){
+       int n=0;
        sscanf(tokens[p].str,"%x",&n);
        return n;
      }
@@ -233,11 +241,11 @@ eval(p, q) {
     return eval(p + 1, q - 1);
   }
   else {
-    op=opfind(p,q);
-    val1 = eval(p, op - 1);
-    val2 = eval(op + 1, q);
+    int op=opfind(p,q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
 
-    switch (op_type) {
+    switch (tokens[op].type) {
       case '+': return val1 + val2;
       case '-': /* ... */return val1-val2;
       case '*': /* ... */return val1*val2;
@@ -245,9 +253,9 @@ eval(p, q) {
       default: assert(0);
     }
   }
-}
   return 0;
 }
+
 
 
 
@@ -257,10 +265,8 @@ eval(p, q) {
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
-    return 0;
-eval(0,strlen(tokens))
-} 
-  }
+    return 0;}
+return eval(0,sizeof(tokens));}
 
   /* TODO: Insert codes to evaluate the expression. */
   
