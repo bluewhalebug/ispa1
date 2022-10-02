@@ -62,7 +62,7 @@ p->next=NULL;}
 return p;
 }
 
-int free_wp(WP *wp){
+void free_wp(WP *wp){
 if(wp==head)head=head->next;
 else{
 WP *p=head;
@@ -71,17 +71,15 @@ p->next=wp->next;
 }
 wp->next=free_;
 free_=wp;
-assert(0);
-return 1;
 }
 
 
 bool delete_wp(int x){
 bool del=false;
-int a=0;
 if(x==0){
 WP *p=head;
-a=free_wp(p);
+free_wp(p);
+del=true;
 }
 else{
 WP *p=head;
@@ -93,10 +91,10 @@ j++;
 if(p->next!=NULL){
 WP *q=p->next;
 p->next=q->next;
-a=free_wp(q);
+free_wp(q);
+del=true;
 }
 }
-if(a==1)del=true;
 return del;
 }
 
