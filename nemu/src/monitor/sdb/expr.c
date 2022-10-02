@@ -229,7 +229,7 @@ bool check_parentheses(int p, int q){
 int eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
-    assert(0);
+    return 0;
   }
   else if (p == q) {
     /* Single token.
