@@ -176,6 +176,7 @@ static bool make_token(char *e) {
   return true;
 }
 
+
 bool check_parentheses(int p, int q){
   if(tokens[p].type !='(' || tokens[q].type != ')') return false;
   int match=0;
@@ -278,7 +279,7 @@ word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;}
-return eval(0,6);}
+return eval(0,nr_token);}
 
   /* TODO: Insert codes to evaluate the expression. */
   
