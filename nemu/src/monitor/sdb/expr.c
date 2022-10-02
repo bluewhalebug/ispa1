@@ -155,8 +155,7 @@ static bool make_token(char *e) {
                    tokens[nr_token].type='-';
                    break;
           case '*':
-                  if(tokens[nr_token-1].type==TK_tennum || tokens[nr_token-1].type==TK_sixnum || tokens[nr_token-1].type==TK_reg) tokens[nr_token].type='*';
-                  else tokens[nr_token].type=DEREF;
+                   tokens[nr_token].type='*';
                    break;
           case '/':
                    tokens[nr_token].type='/';
