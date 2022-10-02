@@ -38,7 +38,7 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"[0-9]+",TK_tennum} ,    // shijinzhi
-  {"0x[0-9,a-f]+",TK_sixnum},//shiliujinzhi
+  {"0[xX][A-Fa-f0-9]{1,8}",TK_sixnum},//shiliujinzhi
   {"\\$[a-z]{2,3}",TK_reg} ,  //reg
   {"\\(",'('}  ,           //zuokuohao
   {"\\)",')'}  ,           //youkuohao
