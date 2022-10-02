@@ -20,6 +20,8 @@
  */
 #include <regex.h>
 
+word_t isa_reg_str2val(const char *s, bool *success);
+
 enum {
   TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
 
@@ -246,6 +248,9 @@ int eval(int p, int q) {
        sscanf(tokens[p].str,"%x",&n);
        return n;
      }
+     if(tokens[p].type==259){
+     bool suc=true;
+     return isa_reg_str2val(tokens[p].str,&suc);}
   }
   else if (check_parentheses(p, q) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
