@@ -237,11 +237,11 @@ int eval(int p, int q) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-     if(tokens[p].type==257){
+     if(tokens[p].type==258){
        int n=0;
        sscanf(tokens[p].str,"%d",&n);
        return n;}
-     if(tokens[p].type==258){
+     if(tokens[p].type==257){
        int n=0;
        sscanf(tokens[p].str,"%x",&n);
        return n;
