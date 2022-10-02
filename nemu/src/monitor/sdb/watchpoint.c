@@ -96,6 +96,7 @@ free_wp(q);
 del=true;
 }
 }
+if(del==false)assert(0);
 return del;
 }
 
