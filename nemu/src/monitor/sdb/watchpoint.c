@@ -64,7 +64,7 @@ return p;
 
 int free_wp(WP *wp){
 if(wp==head){head=head->next;assert(0);}
-else{
+else{assert(0);
 WP *p=head;
 while(p->next!=wp)p=p->next;
 p->next=wp->next;
