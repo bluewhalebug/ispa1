@@ -202,8 +202,8 @@ bool check_parentheses(int p, int q){
   }
   
   int opfind(int p,int q){
+  int tag=2;  
   int match=0;
-  int tag=2;
   int op=0;
   for(int i=p;i<=q;i++){
   if(tokens[i].type =='('){
@@ -223,6 +223,7 @@ bool check_parentheses(int p, int q){
   op=i;}
   }
   }
+  assert(0);
   return op;
   }
   
