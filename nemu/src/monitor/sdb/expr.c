@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256,tennum=0,sixnum,zuo,you,muti,divi,jian,note,and,or,not,'+',reg,TK_EQ
+  TK_NOTYPE = 256,tennum=0,sixnum,reg,'(',')','*','/','+','-',TK_EQ,note,and,or,not
 
   /* TODO: Add more token types */
 
@@ -37,22 +37,21 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"[0-9]+",tennum} ,    // shijinzhi
+  {"0x[0-9,a-f]+",sixnum},//shiliujinzhi
+  {"\\$[a-z]{2,3}",reg} ,  //reg
+  {"\\(",'('}  ,           //zuokuohao
+  {"\\)",')'}  ,           //youkuohao
+  {"\\*",'*'}  ,          //muti
+  {"\\/",'/'}  ,          //divi
+  {"\\+", '+'},          // plus  
+  {"\\-",'-'}  ,          //jian
   {"==", TK_EQ},        // equal
-  {"[0-9]+",tennum}     // shijinzhi
-  {"0x[0-9,a-f]+",sixnum}//shiliujinzhi
-  {"\\(",zuo}             //zuokuohao
-  {"\\)",you}             //youkuohao
-  {"\\*",muti}            //muti
-  {"\\/",divi}            //divi
-  {"\\-",jian}            //jian
-  {"!=",note}              //not equal 
-  {"&&",and}              //and
-  {"\\|\\|",or}           //or
-  {"!",not}               //not
-  {"\\$[a-z]{2,3}",reg}   //reg
-  
-  
+  {"!=",note}   ,           //not equal 
+  {"&&",and}  ,            //and
+  {"\\|\\|",or}   ,        //or
+  {"!",not}            //not
+
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -120,38 +119,41 @@ static bool make_token(char *e) {
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
           case 2:
                    nr_token++;
-                   tokens[nr_token].type=zuo;
-          case 3:
-                   nr_token++;
-                   tokens[nr_token].type=you;
-          case 4:
-                   nr_token++;
-                   tokens[nr_token].type=muti;
-          case 5:
-                   nr_token++;
-                   tokens[nr_token].type=divi;
-          case 6:
-                   nr_token++;
-                   tokens[nr_token].type=jian;
-          case 7:
-                   nr_token++;
-                   tokens[nr_token].type=note;
-          case 8:
-                   nr_token++;
-                   tokens[nr_token].type=and;
-          case 9:
-                   nr_token++;
-                   tokens[nr_token].type=or;
-          case 10:
-                   nr_token++;
-                   tokens[nr_token].type=not;
-          case 11:
-                   nr_token++;
-                   tokens[nr_token].type='+';
-          case 12:
-                   nr_token++;
                    tokens[nr_token].type=reg;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
+          case 3:
+                   nr_token++;
+                   tokens[nr_token].type='(';
+          case 4:
+                   nr_token++;
+                   tokens[nr_token].type=')';
+          case 5:
+                   nr_token++;
+                   tokens[nr_token].type='*';
+          case 6:
+                   nr_token++;
+                   tokens[nr_token].type'/';
+          case 7:
+                   nr_token++;
+                   tokens[nr_token].type='+';         
+          case 8:
+                   nr_token++;
+                   tokens[nr_token].type='-';
+          case 9:
+                   nr_token++;
+                   tokens[nr_token].type=TK_EQ;         
+          case 10:
+                   nr_token++;
+                   tokens[nr_token].type=note;
+          case 11:
+                   nr_token++;
+                   tokens[nr_token].type=and;
+          case 12:
+                   nr_token++;
+                   tokens[nr_token].type=or;
+          case 13:
+                   nr_token++;
+                   tokens[nr_token].type=not;
           default: TODO();
         }
 
@@ -168,15 +170,99 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(int p, int q){
+  if(tokens[p].type !='(' || tokens[q].type != ')') return false;
+  int match=0;
+  for(int i=p;i<=q;i++){
+  if(tokens[i].type =='(') match++;
+  if(tokens[i].type == ')') match--;
+  if(match<=0 && i<q) return false;
+  }
+  if(match!=0) return false;
+  return true;
+  }
+  
+  int opfind(int p,int q){
+  int match=0;
+  int tag=8;
+  for(int i=p;i<=q;i++){
+  if(tokens[i].type =='('){
+  match++;
+  i++;
+  while(true){
+  if(tokens[i].type =='(') match++;
+  if(tokens[i].type ==')') match--;
+  i++;
+  if(match==0) break;
+  }
+  if(i>q) break;
+  }
+  if(tokens[i].type <= tag && tokens[i].type >=5 ) tag=i;
+  }
+  return tag;
+  }
+  
+  
+  
+  
+  
+eval(p, q) {
+  if (p > q) {
+    /* Bad expression */
+    assert(0);
+  }
+  else if (p == q) {
+    /* Single token.
+     * For now this token should be a number.
+     * Return the value of the number.
+     */
+     if(tokens[p].type==tennum){
+       uint32_t n=0;
+       sscanf(tokens[p].str,"%d",&n);
+       return n;}
+     if(tokens[p].type==sixnum){
+       uint32_t n=0;
+       sscanf(tokens[p].str,"%x",&n);
+       return n;
+     }
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* The expression is surrounded by a matched pair of parentheses.
+     * If that is the case, just throw away the parentheses.
+     */
+    return eval(p + 1, q - 1);
+  }
+  else {
+    op=opfind(p,q);
+    val1 = eval(p, op - 1);
+    val2 = eval(op + 1, q);
+
+    switch (op_type) {
+      case '+': return val1 + val2;
+      case '-': /* ... */return val1-val2;
+      case '*': /* ... */return val1*val2;
+      case '/': /* ... */return val1/val2;
+      default: assert(0);
+    }
+  }
+}
+  return 0;
+}
+
+
+
+
+
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
+eval(0,strlen(tokens))
+} 
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
-}
+  
+  
+  
