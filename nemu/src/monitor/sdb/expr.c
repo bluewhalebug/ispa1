@@ -23,7 +23,7 @@
 word_t isa_reg_str2val(const char *s, bool *success);
 
 enum {
-  TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
+  TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT,DEREF
 
   /* TODO: Add more token types */
 
@@ -155,7 +155,8 @@ static bool make_token(char *e) {
                    tokens[nr_token].type='-';
                    break;
           case '*':
-                   tokens[nr_token].type='*';
+                  if(tokens[nr_token-1].type==TK_tennum || tokens[nr_token-1].type==TK_sixnum || tokens[nr_token-1].type==TK_reg) tokens[nr_token].type='*';
+                  else tokens[nr_token].type=DEREF;
                    break;
           case '/':
                    tokens[nr_token].type='/';
