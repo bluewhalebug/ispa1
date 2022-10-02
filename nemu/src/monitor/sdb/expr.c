@@ -200,6 +200,9 @@ bool check_parentheses(int p, int q){
   if(tokens[x].type=='/')return 2;
   if(tokens[x].type==265)return 3;
   if(tokens[x].type==266)return 3;
+  if(tokens[x].type==260)return 0;
+  if(tokens[x].type==261)return 0;
+  if(tokens[x].type==262)return 0;
   return(100);
   }
   
@@ -219,7 +222,7 @@ bool check_parentheses(int p, int q){
   }
   if(i>q) break;
   }
-  if(tokens[i].type=='+' || tokens[i].type=='-' || tokens[i].type=='*' || tokens[i].type=='/' || tokens[i].type==265 || tokens[i].type==266){
+  if(tokens[i].type=='+' || tokens[i].type=='-' || tokens[i].type=='*' || tokens[i].type=='/' || tokens[i].type==265 || tokens[i].type==266 || tokens[i].type==260 || tokens[i].type==261 || tokens[i].type==262){
   if(youxianji(i)<=tag){
   tag=youxianji(i);
   op=i;}
@@ -273,6 +276,9 @@ int eval(int p, int q) {
       case '/': /* ... */return val1/val2;
       case 265: return -val2;
       case 266: return vaddr_read(val2,4);
+      case 260: return val1==val2;
+      case 261: return val1!=val2;
+      case 262: return val1&&val2;
       default: assert(0);
     }
   }
