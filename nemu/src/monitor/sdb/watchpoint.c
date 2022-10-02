@@ -79,6 +79,7 @@ if(x==0){
 WP *p=head;
 head =head->next;
 free_wp(p);
+printf("delete this watchpoint\n");
 }
 else{
 WP *p=head;
