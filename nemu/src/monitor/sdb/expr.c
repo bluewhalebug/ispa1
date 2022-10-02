@@ -278,7 +278,7 @@ word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;}
-return eval(0,sizeof(tokens));}
+return eval(0,2);}
 
   /* TODO: Insert codes to evaluate the expression. */
   
