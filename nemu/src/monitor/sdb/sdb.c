@@ -118,6 +118,7 @@ static int cmd_d(char *args) {
   char *arg=strtok(NULL,"");
   int n=0;
   sscanf(arg,"%d",&n);
+  if(n!=100)assert(0);
   if(delete_wp(n)==true)printf("delete %d watchpoint\n",n);
   else printf("no such watchpoint\n");
   return 0;
