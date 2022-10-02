@@ -23,7 +23,7 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-word_t paddr_read(paddr_t addr, int len);
+word_t vaddr_read(paddr_t addr, int len);
 word_t expr(char *e, bool *success) ;
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -80,7 +80,7 @@ static int cmd_x(char *args){
   sscanf(N,"%d",&n);
   sscanf(EXPR,"%x",&add);
   for(int i=0; i<n;i++){
-    printf("%08x\n",paddr_read(add,4));
+    printf("%08x\n",vaddr_read(add,4));
     add=add+4;}
   return 0;}
 
