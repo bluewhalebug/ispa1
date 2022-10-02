@@ -223,7 +223,6 @@ bool check_parentheses(int p, int q){
   op=i;}
   }
   }
-  assert(0);
   return op;
   }
   
