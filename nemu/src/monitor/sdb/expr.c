@@ -21,7 +21,7 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256,TK_tennum,TK_sixnum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
+  TK_NOTYPE = 256,TK_sixnum,TK_tennum,TK_reg,TK_EQ,TK_NEQ,TK_AND,TK_OR,TK_NOT
 
   /* TODO: Add more token types */
 
@@ -37,8 +37,8 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
+  {"0x[0-9,a-f]+",TK_sixnum},//shiliujinzhi
   {"[0-9]+",TK_tennum} ,    // shijinzhi
-  {"0[xX][A-Fa-f0-9]{1,8}",TK_sixnum},//shiliujinzhi
   {"\\$[a-z]{2,3}",TK_reg} ,  //reg
   {"\\(",'('}  ,           //zuokuohao
   {"\\)",')'}  ,           //youkuohao
