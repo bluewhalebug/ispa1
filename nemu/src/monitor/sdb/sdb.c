@@ -104,7 +104,7 @@ static int cmd_p(char *args) {
 init_regex();
 bool suc=true;
 int result=expr(args,&suc);
-printf("result=%d\n",result);
+printf("%d\n",result);
 return 0;
 }
 
