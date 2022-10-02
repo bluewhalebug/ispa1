@@ -63,8 +63,7 @@ return p;
 }
 
 int free_wp(WP *wp){
-assert(0);
-if(wp==head)head=head->next;
+if(wp==head){head=head->next;assert(0);}
 else{
 WP *p=head;
 while(p->next!=wp)p=p->next;
