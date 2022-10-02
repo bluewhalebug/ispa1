@@ -75,14 +75,14 @@ free_=wp;
 
 
 void delete_wp(int x){
-if(x==1){
+if(x==0){
 WP *p=head;
 head =head->next;
 free_wp(p);
 }
 else{
 WP *p=head;
-int j=1;
+int j=0;
 while(j<x-1 && p->next !=NULL){
 p=p->next;
 j++;
