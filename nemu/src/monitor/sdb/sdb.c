@@ -91,7 +91,7 @@ static int cmd_x(char *args){
   char *N=strtok(NULL," ");
   char *EXPR=strtok(NULL," ");
   int n=0;
-  paddr_t add;
+  vaddr_t add;
   sscanf(N,"%d",&n);
   sscanf(EXPR,"%x",&add);
   for(int i=0; i<n;i++){
