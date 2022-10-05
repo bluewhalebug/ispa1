@@ -248,11 +248,11 @@ int eval(int p, int q) {
      * Return the value of the number.
      */
      if(tokens[p].type==258){
-       uint32_t n=0;
+       int n=0;
        sscanf(tokens[p].str,"%d",&n);
        return n;}
      if(tokens[p].type==257){
-       uint32_t n=0;
+       int n=0;
        sscanf(tokens[p].str,"%x",&n);
        return n;
      }
@@ -268,8 +268,8 @@ int eval(int p, int q) {
   }
   else {
     int op=opfind(p,q);
-    uint32_t val1 = eval(p, op - 1);
-    uint32_t val2 = eval(op + 1, q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
