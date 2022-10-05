@@ -103,7 +103,7 @@ static int cmd_x(char *args){
 static int cmd_p(char *args) {
 init_regex();
 bool suc=true;
-uint32_t result=expr(args,&suc);
+int result=expr(args,&suc);
 printf("%d\n",result);
 return 0;
 }
