@@ -74,26 +74,6 @@ free_=wp;
 }
 
 
-/*bool delete_wp(int x){
-bool del=false;
-if(x==0){
-WP *p=head;
-free_wp(p);
-del=true;
-}
-else{
-WP *p=head;
-int j=0;
-while(j<x && p!=NULL){
-p=p->next;
-j++;
-}
-free_wp(p);
-del=true;
-}
-return del;
-}*/
-
 bool delete_wp(int x){
 for(WP *p=head; p!=NULL; p=p->next){
 if(p->NO==x){
@@ -102,6 +82,8 @@ return true;}
 }
 return false;
 }
+
+
 void print_wp(){
 for(WP *p=head; p!=NULL; p=p->next)
 printf("%d  %s  %d\n",p->NO,p->exp,p->value);
