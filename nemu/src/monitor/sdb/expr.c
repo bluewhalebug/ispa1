@@ -115,30 +115,29 @@ static bool make_token(char *e) {
           case 257: 
                    tokens[nr_token].type=257;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   tokens[nr_token].str[substr_len]='\0';
                    break;
           case 258:
                    tokens[nr_token].type=258;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   tokens[nr_token].str[substr_len]='\0';
                    break;
           case 259:
                    tokens[nr_token].type=259;
                    strncpy(tokens[nr_token].str,substr_start ,substr_len);
+                   tokens[nr_token].str[substr_len]='\0';
                    break;
           case 260:
                    tokens[nr_token].type=260;
-                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
                    break;
           case 261:
                    tokens[nr_token].type=261;
-                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
                    break;
           case 262:
                    tokens[nr_token].type=262;
-                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
                    break;
           case 263:
                    tokens[nr_token].type=263;
-                   strncpy(tokens[nr_token].str,substr_start ,substr_len);
                    break;
           case 264:
                    tokens[nr_token].type=264;        
@@ -237,7 +236,7 @@ bool check_parentheses(int p, int q){
   
   
   
-int eval(int p, int q) {
+uint32_t eval(int p, int q) {
   if (p > q) {
     /* Bad expression */
     return 0;
@@ -248,11 +247,11 @@ int eval(int p, int q) {
      * Return the value of the number.
      */
      if(tokens[p].type==258){
-       int n=0;
+       uint32_t n=0;
        sscanf(tokens[p].str,"%d",&n);
        return n;}
      if(tokens[p].type==257){
-       int n=0;
+       uint32_t n=0;
        sscanf(tokens[p].str,"%x",&n);
        return n;
      }
@@ -268,8 +267,8 @@ int eval(int p, int q) {
   }
   else {
     int op=opfind(p,q);
-    int val1 = eval(p, op - 1);
-    int val2 = eval(op + 1, q);
+    uint32_t val1 = eval(p, op - 1);
+    uint32_t val2 = eval(op + 1, q);
 
     switch (tokens[op].type) {
       case '+': return val1 + val2;
